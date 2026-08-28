@@ -1,0 +1,588 @@
+---
+title: "湯水材料認字遊戲 iPad版"
+format:
+  html:
+    theme: cosmo
+    page-layout: full
+---
+
+~~~~{=html}
+<style>
+body {
+  background: #fff8ef;
+  font-family: Arial, "Microsoft JhengHei", "PingFang HK", sans-serif;
+}
+
+.game-container {
+  max-width: 1050px;
+  margin: 25px auto;
+  text-align: center;
+}
+
+.start-page {
+  background: white;
+  border-radius: 28px;
+  padding: 70px 35px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  margin-top: 80px;
+}
+
+.start-title {
+  font-size: 66px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.start-subtitle {
+  font-size: 36px;
+  color: #666;
+  margin-bottom: 45px;
+}
+
+.start-button {
+  font-size: 46px;
+  font-weight: bold;
+  padding: 25px 80px;
+  border: none;
+  border-radius: 24px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.start-button:hover {
+  background: #ffa726;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.progress {
+  font-size: 28px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 28px;
+  padding: 35px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.soup-box {
+  background: #fff0d6;
+  border: 4px solid #ffb347;
+  border-radius: 26px;
+  padding: 35px 20px;
+  margin-bottom: 30px;
+}
+
+.soup-label {
+  font-size: 28px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.soup-name {
+  font-size: 58px;
+  font-weight: bold;
+  color: #222;
+  line-height: 1.25;
+}
+
+.instruction {
+  font-size: 32px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.counter {
+  font-size: 28px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.ingredients {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.ingredient-button {
+  font-size: 30px;
+  font-weight: bold;
+  padding: 14px 10px 18px 10px;
+  border: 4px solid #ddd;
+  border-radius: 22px;
+  background: #f8f8f8;
+  color: #222;
+  cursor: pointer;
+  min-height: 215px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ingredient-button:hover {
+  background: #fff0d6;
+}
+
+.ingredient-image {
+  width: 100%;
+  height: 125px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  background: white;
+}
+
+.ingredient-word {
+  display: block;
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.ingredient-button.correct {
+  background: #92e6a7;
+  border-color: #2b9348;
+  color: #064b1c;
+}
+
+.ingredient-button.wrong {
+  background: #ffadad;
+  border-color: #d00000;
+  color: #7b0000;
+}
+
+.ingredient-button.disabled {
+  pointer-events: none;
+}
+
+.feedback {
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 25px;
+  min-height: 50px;
+}
+
+.feedback.correct-text {
+  color: #2b9348;
+}
+
+.feedback.wrong-text {
+  color: #d00000;
+}
+
+.next-button {
+  display: none;
+  font-size: 34px;
+  padding: 18px 55px;
+  margin-top: 25px;
+  border: none;
+  border-radius: 18px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.next-button:hover {
+  background: #ffa726;
+}
+
+.result-page {
+  display: none;
+  background: white;
+  border-radius: 28px;
+  padding: 55px 35px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  margin-top: 80px;
+}
+
+.result-title {
+  font-size: 60px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.result-score {
+  font-size: 46px;
+  color: #2b9348;
+  margin-bottom: 25px;
+}
+
+.result-note {
+  font-size: 30px;
+  color: #666;
+  margin-bottom: 35px;
+}
+
+.restart-button {
+  font-size: 36px;
+  padding: 20px 55px;
+  border: none;
+  border-radius: 18px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.restart-button:hover {
+  background: #ffa726;
+}
+
+.summary {
+  margin-top: 35px;
+  text-align: left;
+  font-size: 26px;
+  line-height: 1.8;
+}
+
+.summary-title {
+  font-size: 34px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.summary-item {
+  background: #fff8ef;
+  border-radius: 18px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+}
+
+.summary-soup {
+  font-weight: bold;
+  color: #222;
+}
+
+.summary-ingredients {
+  color: #555;
+}
+
+@media (max-width: 800px) {
+  .ingredients {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .soup-name {
+    font-size: 44px;
+  }
+
+  .ingredient-button {
+    min-height: 200px;
+  }
+
+  .ingredient-word {
+    font-size: 30px;
+  }
+
+  .ingredient-image {
+    height: 115px;
+  }
+}
+</style>
+~~~~
+
+~~~~{=html}
+<div class="game-container">
+
+  <div class="start-page" id="start-page">
+    <div class="start-title">湯水材料認字遊戲</div>
+    <div class="start-subtitle">iPad版：睇圖揀材料</div>
+    <button class="start-button" type="button" onclick="startGame()">開始</button>
+  </div>
+
+  <div id="game-page" style="display: none;">
+    <div class="title">湯水材料認字遊戲</div>
+    <div class="progress" id="progress">第 1 / 4 題</div>
+
+    <div class="card">
+
+      <div class="soup-box">
+        <div class="soup-label">今日煲：</div>
+        <div class="soup-name" id="soup-name"></div>
+      </div>
+
+      <div class="instruction">請揀出呢個湯嘅材料</div>
+      <div class="counter" id="counter"></div>
+
+      <div class="ingredients" id="ingredients"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <button class="next-button" id="next-button" type="button" onclick="nextQuestion()">下一題</button>
+
+    </div>
+  </div>
+
+  <div class="result-page" id="result-page">
+    <div class="result-title">完成！</div>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-note" id="result-note"></div>
+
+    <button class="restart-button" type="button" onclick="restartGame()">再玩一次</button>
+
+    <div class="summary" id="summary"></div>
+  </div>
+
+</div>
+~~~~
+
+~~~~{=html}
+<script>
+const soups = [
+  {
+    name: "青紅蘿蔔豬骨湯",
+    ingredients: ["青蘿蔔", "紅蘿蔔", "豬骨", "蜜棗", "陳皮"]
+  },
+  {
+    name: "合掌瓜粟米排骨湯",
+    ingredients: ["合掌瓜", "粟米", "排骨", "紅蘿蔔", "蜜棗"]
+  },
+  {
+    name: "木瓜雪耳湯",
+    ingredients: ["木瓜", "雪耳", "瘦肉", "南北杏", "蜜棗"]
+  },
+  {
+    name: "粉葛赤小豆湯",
+    ingredients: ["粉葛", "赤小豆", "扁豆", "豬骨", "陳皮", "蜜棗"]
+  }
+];
+
+const allIngredients = [
+  { word: "青蘿蔔", image: "images/green-radish.jpg" },
+  { word: "紅蘿蔔", image: "images/carrot.jpg" },
+  { word: "豬骨", image: "images/pork-bones.jpg" },
+  { word: "蜜棗", image: "images/honey-dates.jpg" },
+  { word: "陳皮", image: "images/dried-tangerine-peel.jpg" },
+  { word: "合掌瓜", image: "images/chayote.jpg" },
+  { word: "粟米", image: "images/corn.jpg" },
+  { word: "排骨", image: "images/pork-ribs.jpg" },
+  { word: "木瓜", image: "images/papaya.jpg" },
+  { word: "雪耳", image: "images/snow-fungus.jpg" },
+  { word: "瘦肉", image: "images/lean-pork.jpg" },
+  { word: "南北杏", image: "images/apricot-kernels.jpg" },
+  { word: "粉葛", image: "images/kudzu-root.jpg" },
+  { word: "赤小豆", image: "images/rice-beans.jpg" },
+  { word: "扁豆", image: "images/hyacinth-beans.jpg" },
+  { word: "花生", image: "images/peanuts.jpg" },
+  { word: "冬瓜", image: "images/winter-melon.jpg" },
+  { word: "節瓜", image: "images/hairy-gourd.jpg" },
+  { word: "蓮藕", image: "images/lotus-root.jpg" },
+  { word: "雞腳", image: "images/chicken-feet.jpg" },
+  { word: "薏米", image: "images/jobs-tears.jpg" },
+  { word: "無花果", image: "images/figs.jpg" },
+  { word: "淮山", image: "images/chinese-yam.jpg" }
+];
+
+let questions = [];
+let currentQuestionIndex = 0;
+let perfectScore = 0;
+let foundCorrect = 0;
+let wrongClickedThisQuestion = false;
+let clickedIngredients = [];
+
+function shuffleArray(array) {
+  const newArray = array.slice();
+
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = newArray[i];
+    newArray[i] = newArray[j];
+    newArray[j] = temp;
+  }
+
+  return newArray;
+}
+
+function startGame() {
+  questions = shuffleArray(soups);
+  currentQuestionIndex = 0;
+  perfectScore = 0;
+
+  document.getElementById("start-page").style.display = "none";
+  document.getElementById("game-page").style.display = "block";
+  document.getElementById("result-page").style.display = "none";
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const currentSoup = questions[currentQuestionIndex];
+
+  foundCorrect = 0;
+  wrongClickedThisQuestion = false;
+  clickedIngredients = [];
+
+  document.getElementById("soup-name").textContent = currentSoup.name;
+
+  document.getElementById("progress").textContent =
+    "第 " + (currentQuestionIndex + 1) + " / " + questions.length + " 題";
+
+  document.getElementById("counter").textContent =
+    "已揀中 0 / " + currentSoup.ingredients.length + " 樣材料";
+
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+
+  document.getElementById("next-button").style.display = "none";
+
+  createIngredientButtons(currentSoup);
+}
+
+function createIngredientButtons(currentSoup) {
+  const ingredientsDiv = document.getElementById("ingredients");
+  ingredientsDiv.innerHTML = "";
+
+  const correctIngredients = currentSoup.ingredients;
+
+  const wrongPool = allIngredients.filter(function(item) {
+    return correctIngredients.indexOf(item.word) === -1;
+  });
+
+  const correctObjects = allIngredients.filter(function(item) {
+    return correctIngredients.indexOf(item.word) !== -1;
+  });
+
+  const numberOfWrongChoices = 12;
+  const selectedWrongIngredients = shuffleArray(wrongPool).slice(0, numberOfWrongChoices);
+
+  const displayedIngredients = shuffleArray(correctObjects.concat(selectedWrongIngredients));
+
+  displayedIngredients.forEach(function(ingredientObj) {
+    const button = document.createElement("button");
+    button.className = "ingredient-button";
+    button.type = "button";
+
+    button.innerHTML =
+      '<img class="ingredient-image" src="' + ingredientObj.image + '" alt="" onerror="this.style.visibility=\'hidden\';">' +
+      '<span class="ingredient-word">' + ingredientObj.word + '</span>';
+
+    button.onclick = function() {
+      checkIngredient(button, ingredientObj.word, currentSoup);
+    };
+
+    ingredientsDiv.appendChild(button);
+  });
+}
+
+function checkIngredient(button, ingredient, currentSoup) {
+  if (clickedIngredients.indexOf(ingredient) !== -1) {
+    return;
+  }
+
+  clickedIngredients.push(ingredient);
+
+  const isCorrect = currentSoup.ingredients.indexOf(ingredient) !== -1;
+
+  if (isCorrect) {
+    button.classList.add("correct");
+    button.classList.add("disabled");
+    foundCorrect = foundCorrect + 1;
+
+    document.getElementById("feedback").textContent = "啱！";
+    document.getElementById("feedback").className = "feedback correct-text";
+  } else {
+    button.classList.add("wrong");
+    button.classList.add("disabled");
+    wrongClickedThisQuestion = true;
+
+    document.getElementById("feedback").textContent = "呢樣唔係呢個湯嘅材料";
+    document.getElementById("feedback").className = "feedback wrong-text";
+  }
+
+  document.getElementById("counter").textContent =
+    "已揀中 " + foundCorrect + " / " + currentSoup.ingredients.length + " 樣材料";
+
+  if (foundCorrect >= currentSoup.ingredients.length) {
+    finishQuestion();
+  }
+}
+
+function finishQuestion() {
+  const allButtons = document.querySelectorAll(".ingredient-button");
+
+  allButtons.forEach(function(btn) {
+    btn.classList.add("disabled");
+  });
+
+  if (wrongClickedThisQuestion === false) {
+    perfectScore = perfectScore + 1;
+
+    document.getElementById("feedback").textContent = "全部揀啱晒！";
+    document.getElementById("feedback").className = "feedback correct-text";
+  } else {
+    document.getElementById("feedback").textContent = "完成！下次可以再試吓少啲錯。";
+    document.getElementById("feedback").className = "feedback wrong-text";
+  }
+
+  if (currentQuestionIndex >= questions.length - 1) {
+    document.getElementById("next-button").textContent = "睇結果";
+  } else {
+    document.getElementById("next-button").textContent = "下一題";
+  }
+
+  document.getElementById("next-button").style.display = "inline-block";
+}
+
+function nextQuestion() {
+  currentQuestionIndex = currentQuestionIndex + 1;
+
+  if (currentQuestionIndex >= questions.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById("start-page").style.display = "none";
+  document.getElementById("game-page").style.display = "none";
+  document.getElementById("result-page").style.display = "block";
+
+  document.getElementById("result-score").textContent =
+    "完全冇錯：" + perfectScore + " / " + questions.length + " 款湯";
+
+  if (perfectScore === questions.length) {
+    document.getElementById("result-note").textContent = "好叻！全部湯料都記得晒。";
+  } else {
+    document.getElementById("result-note").textContent = "做得好！可以再玩一次幫手記熟啲。";
+  }
+
+  createSummary();
+}
+
+function createSummary() {
+  const summaryDiv = document.getElementById("summary");
+
+  let html = "";
+  html += '<div class="summary-title">湯水材料答案</div>';
+
+  soups.forEach(function(soup) {
+    html += '<div class="summary-item">';
+    html += '<div class="summary-soup">' + soup.name + '</div>';
+    html += '<div class="summary-ingredients">' + soup.ingredients.join("、") + '</div>';
+    html += '</div>';
+  });
+
+  summaryDiv.innerHTML = html;
+}
+
+function restartGame() {
+  document.getElementById("start-page").style.display = "block";
+  document.getElementById("game-page").style.display = "none";
+  document.getElementById("result-page").style.display = "none";
+}
+</script>
+~~~~
