@@ -1,0 +1,424 @@
+---
+title: "蔬菜認字遊戲"
+format:
+  html:
+    theme: cosmo
+    page-layout: full
+---
+
+~~~~{=html}
+<style>
+body {
+  background: #fff8ef;
+  font-family: Arial, "Microsoft JhengHei", "PingFang HK", sans-serif;
+}
+
+.game-container {
+  max-width: 950px;
+  margin: 25px auto;
+  text-align: center;
+}
+
+.start-page {
+  background: white;
+  border-radius: 28px;
+  padding: 70px 35px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  margin-top: 80px;
+}
+
+.start-title {
+  font-size: 68px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 45px;
+}
+
+.start-button {
+  font-size: 46px;
+  font-weight: bold;
+  padding: 25px 80px;
+  border: none;
+  border-radius: 24px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.start-button:hover {
+  background: #ffa726;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.progress {
+  font-size: 28px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.image-box {
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.image-box img {
+  max-width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.choice-button {
+  font-size: 42px;
+  font-weight: bold;
+  padding: 25px 15px;
+  border: 4px solid #ddd;
+  border-radius: 22px;
+  background: #f8f8f8;
+  color: #222;
+  cursor: pointer;
+  min-height: 110px;
+}
+
+.choice-button:hover {
+  background: #fff0d6;
+}
+
+.choice-button.correct {
+  background: #92e6a7;
+  border-color: #2b9348;
+  color: #064b1c;
+}
+
+.choice-button.wrong {
+  background: #ffadad;
+  border-color: #d00000;
+  color: #7b0000;
+}
+
+.choice-button.disabled {
+  pointer-events: none;
+}
+
+.next-button {
+  display: none;
+  font-size: 34px;
+  padding: 18px 55px;
+  margin-top: 30px;
+  border: none;
+  border-radius: 18px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.next-button:hover {
+  background: #ffa726;
+}
+
+.result-page {
+  display: none;
+  background: white;
+  border-radius: 28px;
+  padding: 45px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  margin-top: 80px;
+}
+
+.result-title {
+  font-size: 56px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.result-score {
+  font-size: 48px;
+  color: #2b9348;
+  margin-bottom: 30px;
+}
+
+.restart-button {
+  font-size: 36px;
+  padding: 20px 55px;
+  border: none;
+  border-radius: 18px;
+  background: #ffb347;
+  color: #222;
+  cursor: pointer;
+}
+
+.restart-button:hover {
+  background: #ffa726;
+}
+
+.feedback {
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 20px;
+  min-height: 50px;
+}
+
+.feedback.correct-text {
+  color: #2b9348;
+}
+
+.feedback.wrong-text {
+  color: #d00000;
+}
+</style>
+~~~~
+
+~~~~{=html}
+<div class="game-container">
+
+  <div class="start-page" id="start-page">
+    <div class="start-title">準備好未？</div>
+    <button class="start-button" type="button" onclick="startGame()">開始</button>
+  </div>
+
+  <div id="game-page" style="display: none;">
+    <div class="title">蔬菜認字遊戲</div>
+    <div class="progress" id="progress">第 1 / 10 題</div>
+
+    <div class="card">
+      <div class="image-box">
+        <img id="veg-image" src="" alt="蔬菜圖片">
+      </div>
+
+      <div class="choices" id="choices"></div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <button class="next-button" id="next-button" type="button" onclick="nextQuestion()">下一題</button>
+    </div>
+  </div>
+
+  <div class="result-page" id="result-page">
+    <div class="result-title">完成！</div>
+    <div class="result-score" id="result-score"></div>
+    <button class="restart-button" type="button" onclick="restartGame()">再玩一次</button>
+  </div>
+
+</div>
+~~~~
+
+~~~~{=html}
+<script>
+const vegetables = [
+  {
+    word: "菜心",
+    english: "Choy sum",
+    image: "images/choi-sum.jpg"
+  },
+  {
+    word: "芥蘭",
+    english: "Chinese kale",
+    image: "images/gai-lan.jpg"
+  },
+  {
+    word: "通菜",
+    english: "Water spinach",
+    image: "images/water-spinach.jpg"
+  },
+  {
+    word: "菠菜",
+    english: "Spinach",
+    image: "images/spinach.jpg"
+  },
+  {
+    word: "西蘭花",
+    english: "Broccoli",
+    image: "images/broccoli.jpg"
+  },
+  {
+    word: "椰菜花",
+    english: "Cauliflower",
+    image: "images/cauliflower.jpg"
+  },
+  {
+    word: "生菜",
+    english: "Lettuce",
+    image: "images/lettuce.jpg"
+  },
+  {
+    word: "蕃茄",
+    english: "Tomato",
+    image: "images/tomato.jpg"
+  },
+  {
+    word: "紅蘿蔔",
+    english: "Carrot",
+    image: "images/carrot.jpg"
+  },
+  {
+    word: "薯仔",
+    english: "Potato",
+    image: "images/potato.jpg"
+  }
+];
+
+let questions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let answered = false;
+
+function shuffleArray(array) {
+  const newArray = array.slice();
+
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = newArray[i];
+    newArray[i] = newArray[j];
+    newArray[j] = temp;
+  }
+
+  return newArray;
+}
+
+function getRandomChoices(correctVeg) {
+  const wrongChoices = vegetables
+    .filter(function(v) {
+      return v.word !== correctVeg.word;
+    })
+    .map(function(v) {
+      return v.word;
+    });
+
+  const selectedWrongChoices = shuffleArray(wrongChoices).slice(0, 3);
+  const allChoices = shuffleArray([correctVeg.word].concat(selectedWrongChoices));
+
+  return allChoices;
+}
+
+function startGame() {
+  questions = shuffleArray(vegetables);
+  currentQuestionIndex = 0;
+  score = 0;
+  answered = false;
+
+  document.getElementById("start-page").style.display = "none";
+  document.getElementById("game-page").style.display = "block";
+  document.getElementById("result-page").style.display = "none";
+
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+
+  const currentVeg = questions[currentQuestionIndex];
+
+  document.getElementById("veg-image").src = currentVeg.image;
+  document.getElementById("veg-image").alt = currentVeg.word;
+
+  document.getElementById("progress").textContent =
+    "第 " + (currentQuestionIndex + 1) + " / " + questions.length + " 題";
+
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+
+  document.getElementById("next-button").style.display = "none";
+
+  const choices = getRandomChoices(currentVeg);
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
+
+  choices.forEach(function(choice) {
+    const button = document.createElement("button");
+    button.className = "choice-button";
+    button.type = "button";
+    button.textContent = choice;
+
+    button.onclick = function() {
+      checkAnswer(button, choice, currentVeg.word);
+    };
+
+    choicesDiv.appendChild(button);
+  });
+}
+
+function checkAnswer(button, selectedChoice, correctAnswer) {
+  if (answered) {
+    return;
+  }
+
+  answered = true;
+
+  const allButtons = document.querySelectorAll(".choice-button");
+
+  allButtons.forEach(function(btn) {
+    btn.classList.add("disabled");
+
+    if (btn.textContent === correctAnswer) {
+      btn.classList.add("correct");
+    }
+  });
+
+  if (selectedChoice === correctAnswer) {
+    button.classList.add("correct");
+    score = score + 1;
+
+    document.getElementById("feedback").textContent = "答對了！";
+    document.getElementById("feedback").className = "feedback correct-text";
+  } else {
+    button.classList.add("wrong");
+
+    document.getElementById("feedback").textContent =
+      "不是，這是「" + correctAnswer + "」";
+
+    document.getElementById("feedback").className = "feedback wrong-text";
+  }
+
+  document.getElementById("next-button").style.display = "inline-block";
+}
+
+function nextQuestion() {
+  currentQuestionIndex = currentQuestionIndex + 1;
+
+  if (currentQuestionIndex >= questions.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById("start-page").style.display = "none";
+  document.getElementById("game-page").style.display = "none";
+  document.getElementById("result-page").style.display = "block";
+
+  document.getElementById("result-score").textContent =
+    "答對 " + score + " / " + questions.length + " 題";
+}
+
+function restartGame() {
+  document.getElementById("start-page").style.display = "block";
+  document.getElementById("game-page").style.display = "none";
+  document.getElementById("result-page").style.display = "none";
+}
+</script>
+~~~~
